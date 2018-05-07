@@ -16,6 +16,8 @@ public class Weather {
     private float tem_max;
     private float sea_level;
     private float grnd_level;
+    private long sunrise;
+    private long sunset;
 
     public Weather() {
     }
@@ -106,5 +108,21 @@ public class Weather {
 
     public void setGrnd_level(float grnd_level) {
         this.grnd_level = grnd_level;
+    }
+
+    public long getSunrise() {
+        return sunrise;
+    }
+
+    public void setSunrise(long sunrise) {
+        this.sunrise = sunrise;
+    }
+
+    public long getSunset() {
+        return sunset;
+    }
+
+    public void setSunset(long sunset) {
+        this.sunset = sunset;
     }
 }

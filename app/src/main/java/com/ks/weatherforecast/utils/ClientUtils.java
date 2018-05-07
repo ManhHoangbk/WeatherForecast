@@ -1,5 +1,10 @@
 package com.ks.weatherforecast.utils;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.AssetManager;
+
+import com.ks.weatherforecast.Activity.MainActivity;
 import com.ks.weatherforecast.share.model.userinfo.Address;
 import com.ks.weatherforecast.share.model.userinfo.Company;
 import com.ks.weatherforecast.share.model.userinfo.UserInfo;
@@ -8,6 +13,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,11 +80,34 @@ public class ClientUtils {
         return (float) jObj.getDouble(tagName);
     }
 
+    public static Double getDouble(String tagName, JSONObject jObj) throws JSONException {
+        return jObj.getDouble(tagName);
+    }
+
     public static int getInt(String tagName, JSONObject jObj) throws JSONException {
         return jObj.getInt(tagName);
     }
 
     public static long getLong(String tagName, JSONObject jObj) throws JSONException {
         return jObj.getLong(tagName);
+    }
+
+    public static String localize(SharedPreferences sp, String preferenceKey, String defaultValueKey, Context context) {
+        return localize(sp, context, preferenceKey, defaultValueKey);
+    }
+
+    public static String localize(SharedPreferences sp, Context context, String preferenceKey, String defaultValueKey) {
+        String preferenceValue = sp.getString(preferenceKey, defaultValueKey);
+        String result = preferenceValue;
+        if ("speedUnit".equals(preferenceKey)) {
+            if (MainActivity.speedUnits.containsKey(preferenceValue)) {
+                result = context.getString(MainActivity.speedUnits.get(preferenceValue));
+            }
+        } else if ("pressureUnit".equals(preferenceKey)) {
+            if (MainActivity.pressUnits.containsKey(preferenceValue)) {
+                result = context.getString(MainActivity.pressUnits.get(preferenceValue));
+            }
+        }
+        return result;
     }
 }

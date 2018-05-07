@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#62ff00"
-    tools:context="com.ks.weatherforecast.Activity.UserInfoItem">
+    tools:context="com.ks.weatherforecast.views.UserInfoItem">
 
     <TextView
         android:id="@+id/info"

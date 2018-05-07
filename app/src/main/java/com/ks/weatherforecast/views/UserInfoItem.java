@@ -1,4 +1,4 @@
-package com.ks.weatherforecast.Activity;
+package com.ks.weatherforecast.views;
 
 import android.content.Context;
 import android.content.res.TypedArray;
