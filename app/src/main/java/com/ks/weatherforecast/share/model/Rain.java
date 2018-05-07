@@ -7,8 +7,17 @@ package com.ks.weatherforecast.share.model;
 public class Rain {
     private String time;
     private float ammount;
+    private Double value ;
 
     public Rain() {
+    }
+
+    public Double getValue() {
+        return value;
+    }
+
+    public void setValue(Double value) {
+        this.value = value;
     }
 
     public String getTime() {

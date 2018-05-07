@@ -11,11 +11,14 @@ import com.ks.weatherforecast.share.model.Rain;
 import com.ks.weatherforecast.share.model.Weather;
 import com.ks.weatherforecast.share.model.WeatherForecast;
 import com.ks.weatherforecast.share.model.Wind;
+import com.ks.weatherforecast.utils.ClientUtils;
 import com.loopj.android.http.*;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Iterator;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -73,7 +76,7 @@ public class API {
             weatherForecast.setLocation(getLocation(jObj));
             weatherForecast.setWind(getWinds(jObj));
             weatherForecast.setWeather(getWeather(jObj));
-
+            weatherForecast.setRain(getRain(jObj));
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -101,8 +104,8 @@ public class API {
                 JSONObject obj = jsonArray.getJSONObject(0);
                 weather.setId((long)getInt("id", obj));
                 weather.setMain(getString("main", obj));
-                weather.setMain(getString("description", obj));
-                weather.setMain(getString("icon", obj));
+                weather.setDescription(getString("description", obj));
+                weather.setIcon(getString("icon", obj));
             }
 
         } catch (JSONException e) {
@@ -111,26 +114,29 @@ public class API {
         return weather;
     }
 
-//    private static Rain getRain(JSONObject object){
-//        Rain rain = null;
-//        try {
-//            rain = new Rain();
-//            JSONObject wObj = getObject("wind", object);
-//            wind.setSpeed(getFloat("speed", object));
-//            wind.setDeg(getFloat("deg", object));
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        return wind;
-//    }
+
+    private static Rain getRain(JSONObject jObj){
+        Rain rain = null;
+        try {
+            rain = new Rain();
+            JSONObject wObj = getObject("rain", jObj);
+            for (Iterator<String> it = wObj.keys(); it.hasNext(); ) {
+                String key = it.next();
+                rain.setValue(ClientUtils.getDouble(key, wObj));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return rain;
+    }
 
     private static Wind getWinds(JSONObject jObj){
         Wind wind = null;
         try {
             wind = new Wind();
             JSONObject wObj = getObject("wind", jObj);
-            wind.setSpeed(getFloat("speed", wObj));
-            wind.setDeg(getFloat("deg", wObj));
+            wind.setSpeed(ClientUtils.getDouble("speed", wObj));
+            wind.setDeg(ClientUtils.getDouble("deg", wObj));
         } catch (JSONException e) {
             e.printStackTrace();
         }
