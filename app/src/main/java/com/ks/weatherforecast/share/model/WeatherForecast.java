@@ -7,6 +7,7 @@ package com.ks.weatherforecast.share.model;
 public class WeatherForecast {
     private Long id;
     private String name;
+    private String country;
     private Location location;
     private Clouds clouds;
     private Rain rain;
@@ -80,4 +81,13 @@ public class WeatherForecast {
     public void setWind(Wind wind) {
         this.wind = wind;
     }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
 }

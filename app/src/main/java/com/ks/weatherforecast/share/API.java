@@ -64,13 +64,39 @@ public class API {
         });
     }
 
+    public static WeatherForecast parsedataFromString(String data){
+        WeatherForecast weatherForecast = null;
+        try {
+            weatherForecast = new WeatherForecast();
+            JSONObject object = new JSONObject(data);
+            JSONArray array = object.getJSONArray("list");
+            if(array != null && array.length() > 0){
+                JSONObject jObj = array.getJSONObject(0);
+                weatherForecast.setId((long)getInt("id", jObj));
+                weatherForecast.setName(getString("name", jObj));
+                weatherForecast.setLocation(getLocation(jObj));
+                weatherForecast.setWind(getWinds(jObj));
+                weatherForecast.setWeather(getWeather(jObj));
+                weatherForecast.setRain(getRain(jObj));
+            }
+
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return weatherForecast;
+    }
+
     public static WeatherForecast getDataFromString(String data){
-        Log.d("jsonData: ", data);
         WeatherForecast weatherForecast = null;
         try {
             weatherForecast = new WeatherForecast();
             JSONObject jObj = new JSONObject(data);
-
+            if(jObj == null){
+                return weatherForecast;
+            }
             weatherForecast.setId((long)getInt("id", jObj));
             weatherForecast.setName(getString("name", jObj));
             weatherForecast.setLocation(getLocation(jObj));
@@ -90,13 +116,14 @@ public class API {
         try {
             weather = new Weather();
             JSONObject wObj = getObject("main", jObj);
+            if(wObj == null){
+                return weather;
+            }
             weather.setTemp(getFloat("temp", wObj));
             weather.setPressure(getFloat("pressure", wObj));
             weather.setHumidity(getFloat("humidity", wObj));
             weather.setTem_min(getFloat("temp_min", wObj));
             weather.setTem_max(getFloat("temp_max", wObj));
-            weather.setSea_level(getFloat("sea_level", wObj));
-            weather.setGrnd_level(getFloat("grnd_level", wObj));
             weather.setHumidity(getFloat("humidity", wObj));
 
             JSONArray jsonArray = jObj.getJSONArray("weather");
@@ -120,9 +147,11 @@ public class API {
         try {
             rain = new Rain();
             JSONObject wObj = getObject("rain", jObj);
-            for (Iterator<String> it = wObj.keys(); it.hasNext(); ) {
-                String key = it.next();
-                rain.setValue(ClientUtils.getDouble(key, wObj));
+            if(wObj != null){
+                for (Iterator<String> it = wObj.keys(); it.hasNext(); ) {
+                    String key = it.next();
+                    rain.setValue(ClientUtils.getDouble(key, wObj));
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -147,6 +176,9 @@ public class API {
         Location location = new Location();
         try {
             JSONObject coordObj = getObject("coord", jObj);
+            if( coordObj== null){
+                return location;
+            }
             location.setLat(getFloat("lat", coordObj));
             location.setLon(getFloat("lon", coordObj));
         } catch (JSONException e) {
@@ -156,7 +188,12 @@ public class API {
     }
 
     private static JSONObject getObject(String tagName, JSONObject jObj) throws JSONException {
-        JSONObject subObj = jObj.getJSONObject(tagName);
+        JSONObject subObj = null;
+        try {
+            subObj = jObj.getJSONObject(tagName);
+        }catch (Exception e){
+
+        }
         return subObj;
     }
 

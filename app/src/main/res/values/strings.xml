@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Forecastie</string>
+    <string name="app_name">Dự báo thời tiết</string>
 
     <string name="action_search">Search</string>
     <string name="action_refresh">Refresh</string>
@@ -10,11 +10,11 @@
     <string name="tomorrow">Tomorrow</string>
     <string name="later">Later</string>
 
-    <string name="wind">Wind</string>
-    <string name="pressure">Pressure</string>
-    <string name="humidity">Humidity</string>
-    <string name="sunrise">Sunrise</string>
-    <string name="sunset">Sunset</string>
+    <string name="wind">Gió</string>
+    <string name="pressure">Áp suất</string>
+    <string name="humidity">Độ ẩm</string>
+    <string name="sunrise">Bình minh</string>
+    <string name="sunset">Hoàng hôn</string>
 
     <string name="last_update">Last update:\n%s</string>
     <string name="last_update_widget">\nLast update: %s</string>
@@ -132,7 +132,38 @@
     <string name="location_settings_message">Location is not enabled. Do you wish to go to the settings menu?</string>
     <string name="location_settings_button">Settings</string>
     <string name="action_weather_map">Weather Map</string>
-    <string name="rain">Rain</string>
+    <string name="rain">Mây</string>
     <string name="temperature">Temperature</string>
     <string name="action_graphs">Graphs</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+
+    <!-- Units and Measurement-->
+    <string name="percent_sign" translatable="false">\u0025</string>
+    <string name="temperature_with_degree" translatable="false">%s\u00B0</string>
+    <string name="pressure_measurement">hPa</string>
+    <string name="wind_speed_meters">m/s</string>
+    <string name="wind_speed_miles">mph</string>
+    <string name="millimetre_label">mm</string>
+
+    <!-- Weather icons -->
+    <string name="icon_clear_sky_day" translatable="false"></string>
+    <string name="icon_clear_sky_night" translatable="false"></string>
+    <string name="icon_few_clouds_day" translatable="false"></string>
+    <string name="icon_few_clouds_night" translatable="false"></string>
+    <string name="icon_scattered_clouds" translatable="false"></string>
+    <string name="icon_broken_clouds" translatable="false"></string>
+    <string name="icon_shower_rain" translatable="false"></string>
+    <string name="icon_rain_day" translatable="false"></string>
+    <string name="icon_rain_night" translatable="false"></string>
+    <string name="icon_thunderstorm" translatable="false"></string>
+    <string name="icon_snow" translatable="false"></string>
+    <string name="icon_mist" translatable="false"></string>
+    <string name="icon_weather_default" translatable="false"></string>
+    <string name="icon_wind" translatable="false"></string>
+    <string name="icon_humidity" translatable="false"></string>
+    <string name="icon_barometer" translatable="false"></string>
+    <string name="icon_cloudiness" translatable="false"></string>
+    <string name="icon_sunrise" translatable="false"></string>
+    <string name="icon_sunset" translatable="false"></string>
 </resources>
