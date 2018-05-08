@@ -166,4 +166,5 @@
     <string name="icon_cloudiness" translatable="false"></string>
     <string name="icon_sunrise" translatable="false"></string>
     <string name="icon_sunset" translatable="false"></string>
+    <string name="title_activity_detail">DetailActivity</string>
 </resources>

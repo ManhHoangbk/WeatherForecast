@@ -74,6 +74,7 @@ public class API {
                 JSONObject jObj = array.getJSONObject(0);
                 weatherForecast.setId((long)getInt("id", jObj));
                 weatherForecast.setName(getString("name", jObj));
+                weatherForecast.setDate(getInt("dt", jObj)+"");
                 weatherForecast.setLocation(getLocation(jObj));
                 weatherForecast.setWind(getWinds(jObj));
                 weatherForecast.setWeather(getWeather(jObj));
@@ -99,6 +100,7 @@ public class API {
             }
             weatherForecast.setId((long)getInt("id", jObj));
             weatherForecast.setName(getString("name", jObj));
+            weatherForecast.setDate(getInt("dt", jObj)+"");
             weatherForecast.setLocation(getLocation(jObj));
             weatherForecast.setWind(getWinds(jObj));
             weatherForecast.setWeather(getWeather(jObj));
@@ -198,14 +200,29 @@ public class API {
     }
 
     private static String getString(String tagName, JSONObject jObj) throws JSONException {
-        return jObj.getString(tagName);
+        try {
+            return jObj.getString(tagName);
+        }catch (Exception e){
+            return "";
+        }
+
     }
 
     private static float getFloat(String tagName, JSONObject jObj) throws JSONException {
-        return (float) jObj.getDouble(tagName);
+        try {
+            return (float) jObj.getDouble(tagName);
+        }catch (Exception e){
+            return 0;
+        }
+
     }
 
     private static int getInt(String tagName, JSONObject jObj) throws JSONException {
-        return jObj.getInt(tagName);
+        try {
+            return jObj.getInt(tagName);
+        }catch (Exception e){
+            return 0;
+        }
+
     }
 }
