@@ -94,14 +94,6 @@ public class Weather {
         this.tem_max = tem_max;
     }
 
-    public float getSea_level() {
-        return sea_level;
-    }
-
-    public void setSea_level(float sea_level) {
-        this.sea_level = sea_level;
-    }
-
     public float getGrnd_level() {
         return grnd_level;
     }

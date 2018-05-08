@@ -11,7 +11,7 @@ public class Config {
     public static final String UNITS = "metric";
     public static final String API_USING_LISTVIEW = "https://jsonplaceholder.typicode.com/users";
 
-    public static final String  DEFAULT_CITY = "Saigon";
+    public static final String  DEFAULT_CITY = "Ha noi";
     public static final String  DEFAULT_LAT = "51.5072";
     public static final String  DEFAULT_LON = "0.1275";
 }

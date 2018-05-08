@@ -34,6 +34,17 @@
             android:name="com.google.android.wearable.standalone"
             android:value="true" />
 
+        <receiver android:name=".views.ListViewSearch">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/list_view_search_info" />
+        </receiver>
+
+        <activity android:name=".Activity.SearchActivity"></activity>
     </application>
 
 </manifest>

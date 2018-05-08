@@ -3,6 +3,7 @@
     <color name="colorPrimary">#2196F3</color>
     <color name="colorPrimaryDark">#1E88E5</color>
     <color name="colorAccent">#1E88E5</color>
+    <color name="colorAccentDark">#d84315</color>
     <color name="colorBackground">@android:color/transparent</color>
     <color name="colorTintedBackground">#cdcdcd</color>
 
@@ -41,4 +42,5 @@
     <color name="text_light">#ffffff</color>
     <color name="text_dark">#000000</color>
     <color name="tab_indicator">#ffffff</color>
+    <color name="textColorPrimary">#FFFFFF</color>
 </resources>
