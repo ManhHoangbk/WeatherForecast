@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -28,7 +29,7 @@ public abstract class GenericRequestTask extends AsyncTask<String, String, TaskO
 
     ProgressDialog progressDialog;
     Context context;
-    MainActivity activity;
+    AppCompatActivity activity;
     public int loading = 0;
     private String query = "";
 
@@ -36,7 +37,7 @@ public abstract class GenericRequestTask extends AsyncTask<String, String, TaskO
     private static final int TYPE_GET = 1;
 
 
-    public GenericRequestTask(Context context, MainActivity activity, String query) {
+    public GenericRequestTask(Context context, AppCompatActivity activity, String query) {
         this.context = context;
         this.activity = activity;
         this.progressDialog = new ProgressDialog(activity);

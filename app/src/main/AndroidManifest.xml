@@ -44,7 +44,11 @@
                 android:resource="@xml/list_view_search_info" />
         </receiver>
 
-        <activity android:name=".Activity.SearchActivity"></activity>
+        <activity android:name=".Activity.SearchActivity" />
+        <activity
+            android:name=".Activity.DetailActivity"
+            android:label="@string/title_activity_detail"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

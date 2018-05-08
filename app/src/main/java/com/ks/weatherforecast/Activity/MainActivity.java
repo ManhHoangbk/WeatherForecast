@@ -116,8 +116,6 @@ public class MainActivity extends AppCompatActivity{
         if(localString == null){
             localString = "Ha noi";
         }
-        Log.v("name:", localString);
-
         initView();
         handel();
     }
@@ -206,23 +204,30 @@ public class MainActivity extends AppCompatActivity{
         mainDetailLaster.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                getToDetailActivity(0);
             }
         });
 
         mainDetailToday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                getToDetailActivity(1);
             }
         });
 
         mainDetailTomorow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                getToDetailActivity(2);
             }
         });
+    }
+
+    private void getToDetailActivity(int tab){
+        Intent i = new Intent(MainActivity.this, DetailActivity.class);
+        i.putExtra("tab", tab+"");
+        i.putExtra("query", currentWeatherForecast.getName());
+        startActivity(i);
     }
 
     private static void initMappings() {
