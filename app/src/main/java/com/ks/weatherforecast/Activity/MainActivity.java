@@ -110,9 +110,10 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Intent intent = getIntent();
 
+        Intent intent = getIntent();
         localString = intent.getStringExtra("name");
+        Log.v("localString" ,localString == null ? "null " : localString);
         if(localString == null){
             localString = "Ha noi";
         }
@@ -254,8 +255,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void updateTodayWeatherUI(){
-        String location = getCurrentLocation();
-        getDataApi(location);
+        getDataApi(localString);
     }
 
     private void updateDetailWeatherUI(){

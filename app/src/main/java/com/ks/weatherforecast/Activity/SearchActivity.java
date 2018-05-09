@@ -132,7 +132,7 @@ public class SearchActivity extends AppCompatActivity {
         public void onClick(View v) {
             v.setBackgroundColor(Color.rgb(227, 227, 227));
             Intent myIntent = new Intent(SearchActivity.this, MainActivity.class);
-            myIntent.putExtra("name", mCity.getName());
+            myIntent.putExtra("name", mCity.getName()+"");
             startActivity(myIntent);
 
 //            setCity(mCity);

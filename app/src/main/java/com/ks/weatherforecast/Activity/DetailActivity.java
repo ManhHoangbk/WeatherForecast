@@ -40,9 +40,9 @@ public class DetailActivity extends AppCompatActivity {
     private WeatherRecyclerAdapter weatherRecyclerAdapter;
     private RecyclerView recyclerView = null;
 
-    private List<WeatherForecast> longTermWeather = new ArrayList<>();
-    private List<WeatherForecast> longTermTodayWeather = new ArrayList<>();
-    private List<WeatherForecast> longTermTomorrowWeather = new ArrayList<>();
+    private List<WeatherForecast> longTermWeather = null;
+    private List<WeatherForecast> longTermTodayWeather = null;
+    private List<WeatherForecast> longTermTomorrowWeather = null;
 
     private int tab = 0;
     private String query = "";
@@ -60,7 +60,6 @@ public class DetailActivity extends AppCompatActivity {
         tab  = Integer.parseInt(intent.getStringExtra("tab"));
         query = intent.getStringExtra("query");
         activeTab(tab);
-        getData(query);
         handel();
     }
 
@@ -88,6 +87,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void activeTab(int tab){
+        this.tab = tab;
         mainDetailLaster.setTextColor(Color.BLACK);
         mainDetailToday.setTextColor(Color.BLACK);
         mainDetailTomorow.setTextColor(Color.BLACK);
@@ -98,25 +98,34 @@ public class DetailActivity extends AppCompatActivity {
         }else {
             mainDetailTomorow.setTextColor(Color.RED);
         }
+        getData();
     }
 
-    public void getData(String area) {
-        new GenericRequestTask(this, DetailActivity.this, area) {
-            @Override
-            protected ParseResult parseResponse(String response) {
-                return parseLongTermJson(response);
-            }
+    public void getData() {
+        if(longTermWeather == null){
+            longTermWeather = new ArrayList<>();
+            longTermTomorrowWeather = new ArrayList<>();
+            longTermTodayWeather = new ArrayList<>();
+            new GenericRequestTask(this, DetailActivity.this, query) {
+                @Override
+                protected ParseResult parseResponse(String response) {
+                    return parseLongTermJson(response);
+                }
 
-            @Override
-            protected String getAPIName() {
-                return "forecast";
-            }
+                @Override
+                protected String getAPIName() {
+                    return "forecast";
+                }
 
-            @Override
-            protected void updateMainUI() {
-                showData();
-            }
-        }.execute();
+                @Override
+                protected void updateMainUI() {
+                    showData();
+                }
+            }.execute();
+        }else{
+            showData();
+        }
+
     }
 
     private void showData(){
@@ -128,9 +137,9 @@ public class DetailActivity extends AppCompatActivity {
         }else {
             weatherRecyclerAdapter = new WeatherRecyclerAdapter(this, longTermTomorrowWeather);
         }
-        weatherRecyclerAdapter.notifyDataSetChanged();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(weatherRecyclerAdapter);
+        weatherRecyclerAdapter.notifyDataSetChanged();
     };
 
 

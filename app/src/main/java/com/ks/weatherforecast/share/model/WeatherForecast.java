@@ -108,7 +108,6 @@ public class WeatherForecast {
     }
 
     public void setDate(String dateString) {
-        Log.v("dateString", dateString);
         try {
             setDate(new Date(Long.parseLong(dateString) * 1000));
         }
