@@ -30,34 +30,19 @@ import com.ks.weatherforecast.share.model.WeatherForecast;
 
 public class SearchActivity extends AppCompatActivity {
 
-    public static final String TAG = "SearchActivity";
-
-    private final String APP_SETTINGS_CITY = "city";
-    private final String APP_SETTINGS_COUNTRY_CODE = "country_code";
-    private final String APP_SETTINGS_LATITUDE = "latitude";
-    private final String APP_SETTINGS_LONGITUDE = "longitude";
-
     private List<WeatherForecast> mCites;
     private SearchCityAdapter mSearchCityAdapter;
     private RecyclerView recyclerView = null;
-    private SharedPreferences mCityPref;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-
         setupSearchView();
-
-        String APP_SETTINGS_NAME = "config";
-        mCityPref = getSharedPreferences(APP_SETTINGS_NAME, 0);
-
-        recyclerView = (RecyclerView) findViewById(R.id.search_recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(SearchActivity.this));
-
         mCites = new ArrayList<>();
         mSearchCityAdapter = new SearchCityAdapter(mCites);
-        recyclerView.setAdapter(mSearchCityAdapter);
+        recyclerView = (RecyclerView) findViewById(R.id.search_recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(SearchActivity.this));
     }
 
     private void setupSearchView() {
@@ -102,10 +87,6 @@ public class SearchActivity extends AppCompatActivity {
             Intent myIntent = new Intent(SearchActivity.this, MainActivity.class);
             myIntent.putExtra("name", mCity.getName()+"");
             startActivity(myIntent);
-
-//            setCity(mCity);
-//            sendBroadcast(new Intent(Constants.ACTION_FORCED_APPWIDGET_UPDATE));
-//            setResult(RESULT_OK);
             finish();
         }
     }
@@ -166,7 +147,6 @@ public class SearchActivity extends AppCompatActivity {
                     if (filterResults.values != null) {
                         mCites.addAll((ArrayList<WeatherForecast>) filterResults.values);
                     }
-                    mSearchCityAdapter = new SearchCityAdapter(mCites);
                     recyclerView.setAdapter(mSearchCityAdapter);
                     mSearchCityAdapter.notifyDataSetChanged();
                 }

@@ -228,6 +228,12 @@ public class ClientUtils {
                 weather.setIcon(getString("icon", obj));
             }
 
+            JSONObject sys = getObject("sys", jObj);
+            if(sys != null){
+                weather.setSunrise(getLong("sunrise", sys) * 1000);
+                weather.setSunset(getLong("sunset", sys) * 1000);
+            }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
