@@ -248,7 +248,7 @@ public class MainActivity extends AppCompatActivity{
             localName.setText(currentWeatherForecast.getName());
             mIconWeatherView.setText( ClientUtils.getStrIcon(MainActivity.this, currentWeatherForecast.getWeather().getIcon()));
             long now = System.currentTimeMillis();
-            mLastUpdateView.setText("Cập nhật "+ android.text.format.DateFormat.getTimeFormat(this ).format(now) +":"+android.text.format.DateFormat.getDateFormat(this ).format(now));
+            mLastUpdateView.setText("Cập nhật "+ android.text.format.DateFormat.getTimeFormat(this ).format(now) +" - "+android.text.format.DateFormat.getDateFormat(this ).format(now));
             SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
             DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(getApplicationContext());
             if(currentWeatherForecast.getWind() != null){
