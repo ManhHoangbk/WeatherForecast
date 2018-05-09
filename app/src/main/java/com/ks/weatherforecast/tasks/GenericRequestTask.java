@@ -26,7 +26,8 @@ import java.net.URLEncoder;
 import java.util.Locale;
 
 public abstract class GenericRequestTask extends AsyncTask<String, String, TaskOutput> {
-
+    //    https://api.openweathermap.org/data/2.5/weather?q=Ha+noi&lang=vi&mode=json&appid=2a860afe4ee1a7537d3d90e82ceae4d7
+//    http://api.openweathermap.org/data/2.5/find?q=thanh%20hoa&type=like&lang=vi&cnt=14&APPID=1487dd8a93bfd85d278d9ac8dcfee94c
     ProgressDialog progressDialog;
     Context context;
     AppCompatActivity activity;

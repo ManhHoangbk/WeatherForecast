@@ -3,12 +3,21 @@ package com.ks.weatherforecast.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
+import android.os.Bundle;
+import android.os.Message;
+import android.util.Log;
 
 import com.ks.weatherforecast.Activity.MainActivity;
 import com.ks.weatherforecast.R;
-import com.ks.weatherforecast.share.model.userinfo.Address;
-import com.ks.weatherforecast.share.model.userinfo.Company;
-import com.ks.weatherforecast.share.model.userinfo.UserInfo;
+import com.ks.weatherforecast.share.Config;
+import com.ks.weatherforecast.share.model.Clouds;
+import com.ks.weatherforecast.share.model.Location;
+import com.ks.weatherforecast.share.model.Rain;
+import com.ks.weatherforecast.share.model.Weather;
+import com.ks.weatherforecast.share.model.WeatherForecast;
+import com.ks.weatherforecast.share.model.Wind;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,7 +28,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by manhhoang on 4/25/18.
@@ -91,66 +103,227 @@ public class ClientUtils {
         return icon;
     }
 
-    public static List<UserInfo> parseData(String data){
-        List<UserInfo> userInfos = new ArrayList<>();
+    public static void getData(String area){
+        String url = Config.BASE_URL+"?q="+ area + "&units="+ Config.UNITS +"&appid="+ Config.APP_ID;
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.get(url, new AsyncHttpResponseHandler() {
+
+            @Override
+            public void onStart() {
+                // called before request is started
+            }
+
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                String dataReturn =  new String(responseBody);
+                WeatherForecast weatherForecast = getDataFromString(dataReturn);
+
+                Message msg = Message.obtain();
+                Bundle data = new Bundle();
+                data.putBoolean("success", true);
+                msg.setData(data);
+//                callback.handleMessage(data);
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                Log.d("failure", responseBody.toString());
+            }
+
+            @Override
+            public void onRetry(int retryNo) {
+                // called when request is retried
+            }
+        });
+    }
+
+    public static WeatherForecast parsedataFromString(String data){
+        WeatherForecast weatherForecast = null;
         try {
+            weatherForecast = new WeatherForecast();
+            JSONObject object = new JSONObject(data);
+            JSONArray array = object.getJSONArray("list");
+            if(array != null && array.length() > 0){
+                JSONObject jObj = array.getJSONObject(0);
+                weatherForecast.setId((long)getInt("id", jObj));
+                weatherForecast.setName(getString("name", jObj));
+                weatherForecast.setDate(getInt("dt", jObj)+"");
+                weatherForecast.setLocation(getLocation(jObj));
+                weatherForecast.setWind(getWinds(jObj));
+                weatherForecast.setWeather(getWeather(jObj));
+                weatherForecast.setRain(getRain(jObj));
+            }
 
-            JSONArray arr = new JSONArray(data);
-            if(arr != null && arr.length() > 0){
-                for (int i = 0 ; i < arr.length() ; i++){
-                    JSONObject object = arr.getJSONObject(i);
-                    UserInfo info = new UserInfo();
-                    info.setId(getLong("id", object));
-                    info.setEmail(getString("email", object));
-                    info.setName(getString("name", object));
-                    info.setUserName(getString("userName", object));
-                    info.setWebsite(getString("website",object));
-                    info.setPhone(getString("phone",object));
 
-                    JSONObject companyObj = object.getJSONObject("company");
-                    Company company = new Company();
-                    company.setName(getString("name", companyObj));
-                    company.setBs(getString("bs", companyObj));
-                    company.setCatchPhrase(getString("catchPhrase",companyObj));
-                    info.setCompany(company);
 
-                    JSONObject objectAddr = new JSONObject();
-                    Address address = new Address();
-                    address.setCity(getString("city", objectAddr));
-                    address.setStreet(getString("treet",objectAddr));
-                    address.setSuite(getString("suite",objectAddr));
-                    address.setZipcode(getString("zipcode",objectAddr));
-                    info.setAddress(address);
-                    userInfos.add(info);
-//                    info.setName(getS);
-                }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return weatherForecast;
+    }
+
+    public static WeatherForecast getDataFromString(String data){
+        WeatherForecast weatherForecast = null;
+        try {
+            weatherForecast = new WeatherForecast();
+            JSONObject jObj = new JSONObject(data);
+            if(jObj == null){
+                return weatherForecast;
+            }
+            weatherForecast.setId((long)getInt("id", jObj));
+            weatherForecast.setName(getString("name", jObj));
+            weatherForecast.setDate(getInt("dt", jObj)+"");
+            weatherForecast.setLocation(getLocation(jObj));
+            weatherForecast.setWind(getWinds(jObj));
+            weatherForecast.setWeather(getWeather(jObj));
+            weatherForecast.setRain(getRain(jObj));
+            weatherForecast.setClouds(getClouds(jObj));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return weatherForecast;
+    }
+
+    private static Clouds getClouds(JSONObject jObj){
+        Clouds clouds = null;
+        try {
+            clouds = new Clouds();
+            JSONObject wObj = getObject("clouds", jObj);
+            if(wObj != null){
+                Double all = getDouble("all", wObj);
+                clouds.setAll(all);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return clouds;
+    }
+
+    private static Weather getWeather(JSONObject jObj){
+        Weather weather = null;
+        try {
+            weather = new Weather();
+            JSONObject wObj = getObject("main", jObj);
+            if(wObj == null){
+                return weather;
+            }
+            weather.setTemp(getFloat("temp", wObj));
+            weather.setPressure(getFloat("pressure", wObj));
+            weather.setHumidity(getFloat("humidity", wObj));
+            weather.setTem_min(getFloat("temp_min", wObj));
+            weather.setTem_max(getFloat("temp_max", wObj));
+            weather.setHumidity(getFloat("humidity", wObj));
+
+            JSONArray jsonArray = jObj.getJSONArray("weather");
+            if(jsonArray != null && jsonArray.length() > 0){
+                JSONObject obj = jsonArray.getJSONObject(0);
+                weather.setId((long)getInt("id", obj));
+                weather.setMain(getString("main", obj));
+                weather.setDescription(getString("description", obj));
+                weather.setIcon(getString("icon", obj));
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return userInfos;
+        return weather;
     }
 
-    public static JSONObject getObject(String tagName, JSONObject jObj) throws JSONException {
-        JSONObject subObj = jObj.getJSONObject(tagName);
+
+    private static Rain getRain(JSONObject jObj){
+        Rain rain = null;
+        try {
+            rain = new Rain();
+            JSONObject wObj = getObject("rain", jObj);
+            if(wObj != null){
+                for (Iterator<String> it = wObj.keys(); it.hasNext(); ) {
+                    String key = it.next();
+                    rain.setValue(ClientUtils.getDouble(key, wObj));
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return rain;
+    }
+
+    private static Wind getWinds(JSONObject jObj){
+        Wind wind = null;
+        try {
+            wind = new Wind();
+            JSONObject wObj = getObject("wind", jObj);
+            wind.setSpeed(getDouble("speed", wObj));
+            wind.setDeg(getDouble("deg", wObj));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return wind;
+    }
+
+    private static Location getLocation(JSONObject jObj ){
+        Location location = new Location();
+        try {
+            JSONObject coordObj = getObject("coord", jObj);
+            if( coordObj== null){
+                return location;
+            }
+            location.setLat(getFloat("lat", coordObj));
+            location.setLon(getFloat("lon", coordObj));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return location;
+    }
+
+    private static JSONObject getObject(String tagName, JSONObject jObj) throws JSONException {
+        JSONObject subObj = null;
+        try {
+            subObj = jObj.getJSONObject(tagName);
+        }catch (Exception e){
+
+        }
         return subObj;
     }
 
-    public static String getString(String tagName, JSONObject jObj) throws JSONException {
-        return jObj.getString(tagName);
+    private static String getString(String tagName, JSONObject jObj) throws JSONException {
+        try {
+            return jObj.getString(tagName);
+        }catch (Exception e){
+            return "";
+        }
+
     }
 
-    public static float getFloat(String tagName, JSONObject jObj) throws JSONException {
-        return (float) jObj.getDouble(tagName);
+    private static Double getDouble(String tagName, JSONObject jObj) throws JSONException {
+        try {
+            return jObj.getDouble(tagName);
+        }catch (Exception e){
+            return Double.valueOf(0);
+        }
+
     }
 
-    public static Double getDouble(String tagName, JSONObject jObj) throws JSONException {
-        return jObj.getDouble(tagName);
+    private static float getFloat(String tagName, JSONObject jObj) throws JSONException {
+        try {
+            return (float) jObj.getDouble(tagName);
+        }catch (Exception e){
+            return 0;
+        }
+
     }
 
-    public static int getInt(String tagName, JSONObject jObj) throws JSONException {
-        return jObj.getInt(tagName);
+    private static int getInt(String tagName, JSONObject jObj) throws JSONException {
+        try {
+            return jObj.getInt(tagName);
+        }catch (Exception e){
+            return 0;
+        }
+
     }
 
     public static long getLong(String tagName, JSONObject jObj) throws JSONException {

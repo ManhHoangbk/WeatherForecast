@@ -1,19 +1,12 @@
 package com.ks.weatherforecast.Activity;
 
-import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Message;
 import android.preference.PreferenceManager;
-import android.support.constraint.solver.widgets.ConstraintWidgetContainer;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -23,41 +16,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.ks.weatherforecast.ClientData.CityManager;
-import com.ks.weatherforecast.ClientData.LocalData;
 import com.ks.weatherforecast.R;
-import com.ks.weatherforecast.share.API;
-import com.ks.weatherforecast.share.Config;
-import com.ks.weatherforecast.share.model.City;
 import com.ks.weatherforecast.share.model.WeatherForecast;
-import com.ks.weatherforecast.share.model.userinfo.UserInfo;
 import com.ks.weatherforecast.tasks.GenericRequestTask;
 import com.ks.weatherforecast.tasks.ParseResult;
 import com.ks.weatherforecast.utils.ClientUtils;
 import com.ks.weatherforecast.utils.UnitConvertor;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 
-import org.w3c.dom.Text;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class MainActivity extends AppCompatActivity{
-//    https://api.openweathermap.org/data/2.5/weather?q=Ha+noi&lang=vi&mode=json&appid=2a860afe4ee1a7537d3d90e82ceae4d7
-//    http://api.openweathermap.org/data/2.5/find?q=thanh%20hoa&type=like&lang=vi&cnt=14&APPID=1487dd8a93bfd85d278d9ac8dcfee94c
     public static Map<String, Integer> speedUnits = null;
     public static Map<String, Integer> pressUnits = null;
     private TextView localName;
@@ -93,9 +67,7 @@ public class MainActivity extends AppCompatActivity{
     private TextView mainDetailLaster;
     private TextView mainDetailToday;
     private TextView mainDetailTomorow;
-
-
-    Button btnSearch;
+    private Button btnSearch;
     Typeface weatherFont;
     ViewPager viewPager;
     TabLayout tabLayout;
@@ -119,13 +91,6 @@ public class MainActivity extends AppCompatActivity{
         }
         initView();
         handel();
-    }
-
-    private void initLocalSql(){
-        LocalData localData = new LocalData(this);
-//        int totalCountry = localData.getCountCountry();
-        localData.getCountry();
-        localData.getCitiesByCountry("YE");
     }
 
     private void initView(){
@@ -250,8 +215,13 @@ public class MainActivity extends AppCompatActivity{
     @Override
     public void onStart() {
         super.onStart();
-        updateTodayWeatherUI();
-        updateDetailWeatherUI();
+        if(isNetworkConnected()){
+            updateTodayWeatherUI();
+            updateDetailWeatherUI();
+        }else{
+            Toast.makeText(this, "Vui lòng kết nối tới mạng để lấy thông tin" , Toast.LENGTH_LONG);
+        }
+
     }
 
     private void updateTodayWeatherUI(){
@@ -296,7 +266,7 @@ public class MainActivity extends AppCompatActivity{
                 if(currentWeatherForecast.getWeather().getDescription() != null){
                     String rainString = "";
                     if(currentWeatherForecast.getRain() != null){
-                        mCloudinessView.setText(getString(R.string.rain) +" : "+currentWeatherForecast.getRain().getAmmount()+ " %");
+                        mCloudinessView.setText(getString(R.string.rain) +" : "+currentWeatherForecast.getClouds().getAll()+ " %");
                         if(currentWeatherForecast.getRain().getValue() != null){
                             rainString = UnitConvertor.getRainString(currentWeatherForecast.getRain().getValue(), sp);
                         }
@@ -332,20 +302,11 @@ public class MainActivity extends AppCompatActivity{
     }
 
 
-    public void readFileTXT(){
-        try {
-            CityManager.initCity(getAssets().open("city_list.txt"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void getDataApi(String area){
         new GenericRequestTask(this, this, area) {
             @Override
             protected ParseResult parseResponse(String response) {
-                currentWeatherForecast = API.getDataFromString(response);
-                Log.v("currentWeatherForecast", currentWeatherForecast.getName());
+                currentWeatherForecast = ClientUtils.getDataFromString(response);
                 return ParseResult.OK;
             }
 

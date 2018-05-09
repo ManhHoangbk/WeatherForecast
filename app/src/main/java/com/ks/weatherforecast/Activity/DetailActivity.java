@@ -5,18 +5,14 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.ks.weatherforecast.R;
-import com.ks.weatherforecast.share.API;
 import com.ks.weatherforecast.share.model.WeatherForecast;
 import com.ks.weatherforecast.tasks.GenericRequestTask;
 import com.ks.weatherforecast.tasks.ParseResult;
@@ -27,7 +23,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -166,7 +161,7 @@ public class DetailActivity extends AppCompatActivity {
             for (i = 0; i < list.length(); i++) {
                 JSONObject listItem = list.getJSONObject(i);
 
-                WeatherForecast weather = API.getDataFromString(listItem.toString());
+                WeatherForecast weather = ClientUtils.getDataFromString(listItem.toString());
 
                 final String dateMsString = listItem.getString("dt") + "000";
                 Calendar cal = Calendar.getInstance();

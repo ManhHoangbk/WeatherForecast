@@ -13,7 +13,6 @@ import android.util.Log;
 import com.ks.weatherforecast.BuildConfig;
 import com.ks.weatherforecast.share.model.City;
 import com.ks.weatherforecast.share.model.CountryCode;
-import com.ks.weatherforecast.share.model.userinfo.UserInfo;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -237,36 +236,6 @@ public class LocalData extends SQLiteOpenHelper {
 
         // return count
         return count;
-    }
-
-    public List<UserInfo> getAllUserInfo() {
-
-        List<UserInfo> users = new ArrayList<>();
-        // Select All Query
-        String selectQuery = "SELECT  * FROM UserInfo";
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-
-
-        // Duyệt trên con trỏ, và thêm vào danh sách.
-        if (cursor.moveToFirst()) {
-            do {
-                UserInfo user = new UserInfo();
-                user.setId(Long.parseLong(cursor.getInt(0)+""));
-                user.setName(cursor.getString(1));
-                user.setUserName(cursor.getString(2));
-                user.setEmail(cursor.getString(3));
-                user.setPhone(cursor.getString(4));
-                user.setWebsite(cursor.getString(5));
-
-                // Thêm vào danh sách.
-                users.add(user);
-            } while (cursor.moveToNext());
-        }
-
-        // return note list
-        return users;
     }
 
 //    public List<City> getCityData(){
