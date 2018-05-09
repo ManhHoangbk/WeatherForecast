@@ -56,7 +56,6 @@ public abstract class GenericRequestTask extends AsyncTask<String, String, TaskO
 
     @Override
     protected TaskOutput doInBackground(String... params) {
-        Log.v("params TaskOutput: ", params.toString());
         TaskOutput output = new TaskOutput();
         String response = "";
             try {
@@ -163,7 +162,7 @@ public abstract class GenericRequestTask extends AsyncTask<String, String, TaskO
         StringBuilder urlBuilder = new StringBuilder("https://api.openweathermap.org/data/2.5/");
         urlBuilder.append(getAPIName()).append("?");
 
-            final String city = sp.getString("city", Config.DEFAULT_CITY);
+            final String city = sp.getString("city", query);
             urlBuilder.append("q=").append(URLEncoder.encode(city, "UTF-8"));
 
         urlBuilder.append("&lang=").append(getLanguage());
